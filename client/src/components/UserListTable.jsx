@@ -2,13 +2,15 @@ import UserListItem from "./UserListItem";
 import * as userAPI from '../api/userAPI';
 import { useState, useEffect } from 'react';
 import CreateUserModal from "./CreateUserModal";
+import UserInfoModal from "./UserInfoModal";
 
 const UserListTable = () => {
 
     const [users, setUsers] = useState([]);
     const [showCreate, setShowCreate] = useState(false);
+    const [showInfo, setShowInfo] = useState(false);
+    const [selectedUser, setSelectedUser] = useState(null);
 
-    console.log(users);
     useEffect(() => {
         userAPI.getAll()
         .then(result => setUsers(result))
@@ -33,6 +35,11 @@ const UserListTable = () => {
         setShowCreate(false);
     }
 
+    const userInfoClickHandler = async (userId) => {
+        setSelectedUser(userId);
+        setShowInfo(true);
+    }
+
   return (
     <div className="table-wrapper">
     {showCreate && (
@@ -41,6 +48,13 @@ const UserListTable = () => {
      onUserCreate={userCreateHandler}
      />
      )}
+
+     {showInfo && (
+        <UserInfoModal 
+        onClose={() => setShowInfo(false)}
+        userId={selectedUser}
+        />
+    )}
 
       <table className="table">
         <thead>
@@ -143,12 +157,14 @@ const UserListTable = () => {
            {users.map(user => (
             <UserListItem 
               key={user._id}
+              userId={user._id}
               createdAt={user.createdAt}
               firstName={user.firstName}
               lastName={user.lastName}
               email={user.email}
               phoneNumber={user.phoneNumber}
               imageUrl={user.imageUrl}
+              onInfoClick={userInfoClickHandler}
             />
            ))}
         </tbody>
