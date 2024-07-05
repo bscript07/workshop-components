@@ -7,13 +7,13 @@ const UserInfoModal = ({
     onClose,
 }) => {
 
-    const [user, setUser] = useState({ address: {}});
+    const [user, setUser] = useState({});
 
     useEffect(() => {
         userAPI.getOne(userId)
         .then(result => setUser(result));
     }, [userId]);
-    
+
   return (
     <div className="overlay">
       <div className="backdrop" onClick={onClose}></div>
@@ -59,7 +59,7 @@ const UserInfoModal = ({
               </p>
               <p>
                 Address:
-                <strong> {user.address.country}, {user.address.city}, {user.address.street} {user.address.streetNumber} </strong>
+                <strong> {user.address?.country}, {user.address?.city}, {user.address?.street} {user.address?.streetNumber} </strong>
               </p>
 
               <p>
