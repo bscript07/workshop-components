@@ -4,19 +4,26 @@ import { useState, useEffect } from 'react';
 import CreateUserModal from "./CreateUserModal";
 import UserInfoModal from "./UserInfoModal";
 import UserDeleteModal from "./UserDeleteModal";
+import Spinner from "./Spinner";
 
 const UserListTable = () => {
 
     const [users, setUsers] = useState([]);
+    const [isLoading, setIsLoading] = useState(false);
     const [showCreate, setShowCreate] = useState(false);
     const [showInfo, setShowInfo] = useState(false);
     const [showDelete, setShowDelete] = useState(false);
     const [selectedUser, setSelectedUser] = useState(null);
 
     useEffect(() => {
+        setIsLoading(true);
+
         userAPI.getAll()
         .then(result => setUsers(result))
         .catch(err => console.log(err))
+        .finally(() => {
+            setIsLoading(false);
+        })
     }, []);
 
     const createUserClickHandler = () => {
@@ -77,6 +84,7 @@ const UserListTable = () => {
          />
     )}
 
+    {isLoading && <Spinner />}
       <table className="table">
         <thead>
           <tr>
